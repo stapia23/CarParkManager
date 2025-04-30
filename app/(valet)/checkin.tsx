@@ -76,16 +76,16 @@ const styles = StyleSheet.create({
     mapTitle: {
         fontSize: 20,
         fontWeight: 'bold',
-        color: '#fff',
+        color: 'black',
         marginTop: 20,
         marginBottom: 10,
     },
     selectedSpotText: {
-        color: '#fff',
+        color: 'black',
         marginTop: 10,
     },
     selectedCustomerText: {
-        color: '#fff',
+        color: 'black',
         marginTop: 5,
     },
 });

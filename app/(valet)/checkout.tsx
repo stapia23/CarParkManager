@@ -46,7 +46,7 @@ export default function CheckoutScreen() {
         try {
             await checkOutVehicle(vehicle.id, vehicle.parkingSpotId);
             Alert.alert('Success', 'Vehicle checked out successfully!');
-            router.push('/(valet)/home'); // Navigate back to home
+            router.push('/(valet)/home');
         } catch (err: any) {
             console.error('Error checking out vehicle:', err);
             setError('Failed to check out vehicle.');

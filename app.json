@@ -8,6 +8,10 @@
     "scheme": "myapp",
     "userInterfaceStyle": "automatic",
     "newArchEnabled": true,
+    "assetBundlePatterns": ["**/*"],
+    "fonts": {
+      "SpaceMono-Regular": "./assets/fonts/SpaceMono-Regular.ttf"
+    },
     "ios": {
       "supportsTablet": true
     },

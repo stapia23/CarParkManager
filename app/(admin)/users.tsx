@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import { useAuth } from '../../context/AuthContext';
 import { Redirect, useRouter } from 'expo-router';
-import {View,Text,Button,StyleSheet,Alert,TextInput,FlatList,} from 'react-native';
+import {View,Text,Button,StyleSheet,Alert,TextInput,FlatList, ScrollView,} from 'react-native';
 import CreateUserForm from './CreateUserForm';
 import {createUserWithEmailAndPassword,getAuth,} from 'firebase/auth';
 import {doc,setDoc,serverTimestamp,getFirestore,collection,getDocs,deleteDoc,updateDoc,query,where,} from 'firebase/firestore';
@@ -121,31 +121,26 @@ export default function UsersScreen() {
       <Text style={globalStyles.title}>Manage Users</Text>
 
       {loading && <Text>Creating Valet...</Text>}
-      {!creatingValet ? (
-        <Button title="Create Valet" onPress={() => setCreatingValet(true)} />
-      ) : (
-        <CreateUserForm onCreateUser={handleCreateUser} loading={loading} />
-      )}
+      
+      <Button title={creatingValet ? "Cancel" : "Create Valet"} onPress={() => setCreatingValet(prev => !prev)} />
+      
+      {creatingValet && ( <View style={{ marginVertical: 10 }}> <CreateUserForm onCreateUser={handleCreateUser} loading={loading} /> </View>)}
 
-      <TextInput
-        style={styles.searchInput}
-        placeholder="Search by name or email"
-        value={searchTerm}
-        onChangeText={setSearchTerm}
-      />
-
-      <FlatList
-        data={filteredUsers}
-        keyExtractor={(item) => item.id}
-        renderItem={({ item }) => (
-          <View style={styles.userCard}>
-            <Text style={styles.userText}>{item.name} - {item.email}</Text>
-            <Button title="Edit" onPress={() => handleEditUser(item)} />
-            <Button title="Delete" color="red" onPress={() => handleDeleteUser(item.id)} />
-          </View>
-        )}
-      />
-
+      <ScrollView keyboardShouldPersistTaps="handled">
+        <TextInput style={styles.searchInput} placeholder="Search by name or email" value={searchTerm} onChangeText={setSearchTerm} />
+        <FlatList
+          data={filteredUsers}
+          keyExtractor={(item) => item.id}
+          renderItem={({item}) => (
+            <View style={styles.userCard}>
+              <Text style={styles.userText}>{item.name} - {item.email}</Text>
+              <Button title="Edit" onPress={() => handleEditUser(item)} />
+              <Button title="Delete" color="red" onPress={() => handleDeleteUser(item.id)} />
+            </View>
+          )}
+          />
+      </ScrollView>
+      
       {selectedValet && (
         <EditValet
           visible={isModalVisible}

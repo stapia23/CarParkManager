@@ -126,7 +126,7 @@ const styles = StyleSheet.create({
         backgroundColor: '#2f6380',
     },
     loadingText: {
-        color: '#fff',
+        color: 'black',
         fontSize: 18,
     },
     errorContainer: {
@@ -145,12 +145,12 @@ const styles = StyleSheet.create({
     title: {
         fontSize: 24,
         fontWeight: 'bold',
-        color: '#ffffff',
+        color: 'black',
         marginBottom: 10,
     },
     subtitle: {
         fontSize: 16,
-        color: '#cccccc',
+        color: 'black',
         marginBottom: 20,
     },
     resultItem: {
@@ -162,16 +162,16 @@ const styles = StyleSheet.create({
         borderWidth: 1,
     },
     resultName: {
-        color: '#ffffff',
+        color: 'black',
         fontWeight: 'bold',
         marginBottom: 5,
     },
     resultInfo: {
-        color: '#dddddd',
+        color: 'black',
         marginBottom: 3,
     },
     noResults: {
-        color: '#cccccc',
+        color: 'black',
         fontStyle: 'italic',
         marginTop: 10,
     },

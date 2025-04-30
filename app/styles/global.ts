@@ -3,42 +3,45 @@ import { StyleSheet } from 'react-native';
 const globalStyles = StyleSheet.create({
     container: {
         flex: 1,
-        padding: 20,
-        backgroundColor: 'grey',
+        padding: 24,
+        backgroundColor: '#f4f5f6',
+        justifyContent: 'center',
         },
     scrollContainer: {
         flexGrow: 1,
     },
     title: {
-        fontSize: 25,
+        fontSize: 32,
         fontWeight: 'bold',
-        color: 'white',
-        marginBottom: 10,
+        textAlign: 'center',
+        color: '#black',
+        marginBottom: 40,
     },
     titleLarge: {
         fontSize: 25,
         fontWeight: 'bold',
-        color: 'white',
+        color: 'black',
         marginBottom: 20,
     },
     titleSmall: {
         fontSize: 20,
         fontWeight: 'bold',
-        color: 'white',
+        color: 'black',
         marginBottom: 10,
         textAlign: 'center',
     },
     button: {
-        backgroundColor: '#d17771',
+        backgroundColor: '#2e86de',
         paddingVertical: 15,
         paddingHorizontal: 30,
-        borderRadius: 10,
-        marginBottom: 15,
+        borderRadius: 8,
+        marginBottom: 10,
     },
     buttonText: {
-        fontSize: 20,
+        textAlign: 'center',
+        fontSize: 16,
         fontWeight: 'bold',
-        color: 'black',
+        color: '#fff',
     },
     searchContainer: {
         flexDirection: 'row',
@@ -52,7 +55,7 @@ const globalStyles = StyleSheet.create({
         borderRadius: 5,
         paddingHorizontal: 10,
         marginRight: 10,
-        color: 'white',
+        color: 'black',
     },
     loadingContainer: {
         flex: 1,
@@ -75,8 +78,43 @@ const globalStyles = StyleSheet.create({
     },
     subtitle: {
         fontSize: 15,
-        color: '#ccc',
+        color: 'black',
         marginBottom: 20,
+    },
+    form: {
+        gap: 16,
+    },
+    label: {
+        fontSize: 14,
+        color: '#333',
+        marginBottom: 4,
+    },
+    input: {
+        borderWidth: 1,
+        borderColor: '#ccc',
+        borderRadius: 8,
+        paddingHorizontal: 12,
+        paddingVertical: 10,
+        fontSize: 16,
+        backgroundColor: '#f9f9f9'
+      },
+    passwordContiner: {
+        flexDirection: 'row',
+        alignItems: 'center',
+        gap: 8,
+      },
+    toggle: {
+        color: '#007bff',
+        fontWeight: '500',
+        paddingHorizontal: 8,
+      },
+    pageContainer: {
+        flex: 1,
+        justifyContent: 'space-between',
+        paddingBottom: 20,
+    },
+    signOutContainer: {
+        alignSelf: 'stretch',
     },
 });
 

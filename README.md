@@ -1,6 +1,6 @@
 # CarParkManager
 
-A mobile-first web app to help car parking lots manage inventory based on vehicle size, arrival date, and pickup schedule. Built using React Native and Firebase.
+A mobile web app to help car parking lots manage inventory based on vehicle size, arrival date, and pickup schedule. Built using React Native and Firebase.
 
 ## Features
 - Real-time vehicle tracking

@@ -1,18 +1,6 @@
 import { initializeApp } from 'firebase/app';
 import { getAuth } from 'firebase/auth';
-import { 
-  getFirestore, 
-  collection, 
-  doc, 
-  setDoc, 
-  getDoc, 
-  query, 
-  where, 
-  orderBy, 
-  limit,
-  addDoc,
-  Timestamp 
-} from 'firebase/firestore';
+import { getFirestore, collection, doc, setDoc, getDoc, query, where, orderBy, limit, addDoc, Timestamp } from 'firebase/firestore';
 import { getStorage } from 'firebase/storage';
 
 const firebaseConfig = {

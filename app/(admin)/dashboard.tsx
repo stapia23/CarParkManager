@@ -16,10 +16,17 @@ export default function Dashboard() {
       {profile?.email && (
         <Text style={styles.userInfo}>Logged in as: {profile.displayName}</Text>
       )}
+
       <Button
         title="Manage Users"
         onPress={() => router.push('/(admin)/users')} 
       />
+
+      <Button
+        title="Design Parking Lot"
+        onPress={() => router.push('/parking-lot-designer' as any)}
+      />
+
       <SignOutButton />
     </View>
   );

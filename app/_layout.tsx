@@ -1,7 +1,16 @@
+import { useEffect } from 'react';
 import { Stack } from 'expo-router';
 import { AuthProvider } from '@/context/AuthContext';
 
 export default function RootLayout() {
+  useEffect(() => {
+    if (typeof window !== 'undefined') {
+      import('@shopify/react-native-skia/lib/module/web').catch((err) => {
+        console.error('Failed to initialize Skia for Web:', err);
+      });
+    }
+  }, []);
+
   return (
     <AuthProvider>
       <RootNavigator />

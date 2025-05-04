@@ -1,8 +1,8 @@
 import React, { useState, useRef } from 'react';
 import { View, Button, TextInput, StyleSheet, Dimensions, ScrollView, TouchableOpacity, Text } from 'react-native';
 import { Svg, Rect, Text as SvgText } from 'react-native-svg';
-import { doc, setDoc, getDoc } from 'firebase/firestore';
-import { db } from '../../lib/firebase';
+import * as FileSystem from 'expo-file-system';
+import * as Sharing from 'expo-sharing';
 
 const { width, height } = Dimensions.get('window');
 
@@ -15,8 +15,8 @@ interface ParkingSpot {
   height: number;
 }
 
-const SPOT_WIDTH = 60;
-const SPOT_HEIGHT = 100;
+const SPOT_WIDTH = 100;
+const SPOT_HEIGHT = 60;
 const SPOT_MARGIN = 10;
 
 export default function ParkingLotDesigner() {
@@ -113,50 +113,37 @@ export default function ParkingLotDesigner() {
     offsetRef.current.y = 0;
   };
 
-  const saveLayout = async () => {
+  const exportLayoutToJSON = async () => {
     try {
-        await setDoc(doc(db, 'layouts', 'adminLayout'), { spots, updatedAt: new Date().toISOString(), });
-        alert('Layout saved to Firestore.');
-    } catch (error) {
-        console.error('Failed to save layout:', error);
-        alert('Failed to save layout.');
-    }
-  };
+      const layoutData = {
+        layoutName: `Layout-${new Date().toISOString()}`,
+        createdAt: new Date().toISOString(),
+        spots: spots.map(({ id, label, x, y, width, height }) => ({
+          id,
+          label,
+          x,
+          y,
+          width,
+          height,
+        })),
+      };
+  
+      const json = JSON.stringify(layoutData, null, 2);
+      const fileUri = FileSystem.documentDirectory + 'parking_layout.json';
+      
+      await FileSystem.writeAsStringAsync(fileUri, json, {
+        encoding: FileSystem.EncodingType.UTF8,
+      });
 
-  const importLayout = async () => {
-    try {
-      const docRef = doc(db, 'layouts', 'adminLayout');
-      const layoutSnap = await getDoc(docRef);
-
-      if (layoutSnap.exists()) {
-        const data = layoutSnap.data();
-        const importedSpots = data.spots.map((spot: any, index: number) => ({
-          id: `imported-${index}`,
-          label: spot.label,
-          x: spot.x,
-          y: spot.y,
-          width: spot.width,
-          height: spot.height,
-        }));
-
-        setSpots(importedSpots);
-
-        alert('Layout imported successfully.');
+      if (await Sharing.isAvailableAsync()) {
+        await Sharing.shareAsync(fileUri);
       } else {
-        alert('No layout found.');
+        alert('Sharing is not available on this platform');
       }
     } catch (error) {
-      console.error('Failed to import layout:', error);
-      alert('Failed to import layout.');
+      console.error('Error exporting layout:', error);
+      alert('Failed to export layout.');
     }
-  };
-
-  const editLayout = (spotId: string) => {
-    setSpots((prev) =>
-      prev.map((spot) =>
-        spot.id === spotId ? { ...spot, label: `${spot.label}_edited` } : spot
-      )
-    );
   };
 
   return (
@@ -241,10 +228,9 @@ export default function ParkingLotDesigner() {
           <Svg
             height={height * 2}
             width={width * 2}
-            onStartShouldSetResponder={() => true}
-            onResponderMove={(e) => handleTouchMove(e, selectedLabel ?? '')}
-            onResponderRelease={handleTouchEnd}
             style={styles.svg}
+            pointerEvents="box-none"
+            onStartShouldSetResponder={() => true}
           >
             {spots.map((spot) => (
               <React.Fragment key={spot.id}>
@@ -255,7 +241,8 @@ export default function ParkingLotDesigner() {
                   height={spot.height}
                   fill="green"
                   onPressIn={(e) => handleTouchStart(e, spot.id, spot)}
-                  onLongPress={() => editLayout(spot.id)} // Add long press to edit
+                  onResponderMove={(e) => handleTouchMove(e, spot.id)}
+                  onResponderRelease={handleTouchEnd}
                 />
                 <SvgText x={spot.x + 5} y={spot.y + 20} fill="white" fontSize="12">
                   {spot.label}
@@ -267,8 +254,7 @@ export default function ParkingLotDesigner() {
       </ScrollView>
 
       <View style={styles.saveButton}>
-        <Button title="Save Layout" onPress={saveLayout} />
-        <Button title="Import Layout" onPress={importLayout} />
+        <Button title="Export Layout as JSON" onPress={exportLayoutToJSON} />
       </View>
     </View>
   );

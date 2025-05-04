@@ -3,16 +3,9 @@ import { auth, db } from '../lib/firebase';
 import { onAuthStateChanged, User } from 'firebase/auth';
 import { doc, getDoc } from 'firebase/firestore';
 import { useRouter } from 'expo-router'; 
-
+import { UserProfile } from '@/types';
 export type UserRole = 'admin' | 'valet' | 'customer' | null;
 
-interface UserProfile {
-  role: UserRole;
-  displayName: string;
-  phoneNumber: string;
-  email: string;
-  uid: string;
-}
 
 interface AuthContextType {
   user: User | null;
@@ -46,30 +39,28 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
   useEffect(() => {
     const unsubscribe = onAuthStateChanged(auth, async (authUser) => {
       setUser(authUser);
-  
+
       if (authUser) {
         setIsAuthenticated(true);
         try {
-          // Fetch user profile from Firestore
           const userDoc = await getDoc(doc(db, 'users', authUser.uid));
-          
           if (userDoc.exists()) {
             const userData = userDoc.data();
-            setRole(userData.role as UserRole);  // Set role
+            setRole(userData.role as UserRole);
             setProfile({
               role: userData.role as UserRole,
-              displayName: userData.name,
+              name: userData.name,
               phoneNumber: userData.phoneNumber,
               email: authUser.email || '',
               uid: authUser.uid,
             });
           } else {
-            setRole(null);  // No role found
-            setProfile(null);  // No profile
+            setRole(null);
+            setProfile(null);
           }
         } catch (error) {
           console.error('Error fetching user profile:', error);
-          setRole(null);  // Error fetching role
+          setRole(null);
           setProfile(null);
         }
       } else {
@@ -79,37 +70,29 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
       }
       setLoading(false);
     });
-  
+
     return () => unsubscribe();
-  }, []);  
+  }, []);
 
   useEffect(() => {
-    if (!loading) {
-      if (isAuthenticated) {
-        if (role === 'admin') {
-          router.replace('/(admin)/dashboard');
-        } else if (role === 'valet') {
-          router.replace('/(valet)/home');
-        } else {
-          console.log('No role assigned');
-          router.replace('/login');
-        }
-      } else {
-        console.log('User not authenticated');
-        router.replace('/login');
+    if (!loading && isAuthenticated) {
+      if (role === 'admin') {
+        router.replace('/(admin)/dashboard');
+      } else if (role === 'valet') {
+        router.replace('/(valet)/home');
       }
+    } else if (!loading && !isAuthenticated) {
+      router.replace('/login');
     }
   }, [role, isAuthenticated, loading, router]);
-  
 
   const signOut = async () => {
     try {
-      setLoading(true);
       await auth.signOut();
     } catch (error) {
       console.error('Error signing out:', error);
     }
-  };  
+  };
 
   return (
     <AuthContext.Provider value={{ user, profile, role, loading, signOut, isAuthenticated }}>

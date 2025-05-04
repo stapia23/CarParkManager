@@ -1,13 +1,16 @@
 import { useEffect } from 'react';
 import { Stack } from 'expo-router';
 import { AuthProvider } from '@/context/AuthContext';
+import { Canvas } from '@shopify/react-native-skia';
 
 export default function RootLayout() {
   useEffect(() => {
     if (typeof window !== 'undefined') {
-      import('@shopify/react-native-skia/lib/module/web').catch((err) => {
+      try {
+        console.log('Skia initialized for Web');
+      } catch (err) {
         console.error('Failed to initialize Skia for Web:', err);
-      });
+      }
     }
   }, []);
 
@@ -24,7 +27,6 @@ function RootNavigator() {
       <Stack.Screen name='login' />
       <Stack.Screen name='register' />
       <Stack.Screen name='index' />
-      <Stack.Screen name='(tabs)' />
       <Stack.Screen name='(admin)' />
       <Stack.Screen name='(valet)' />
       <Stack.Screen name='+not-found' />
